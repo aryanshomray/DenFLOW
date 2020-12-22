@@ -11,9 +11,10 @@
         "args":{
             "data_dir": "data/",
             "batch_size": 128,
-            "shuffle": true,
+            "shuffle": false,
             "validation_split": 0.1,
-            "num_workers": 2
+            "num_workers": 2,
+            "crop_size": 256
         }
     },
     "optimizer": {
@@ -24,9 +25,9 @@
             "amsgrad": true
         }
     },
-    "loss": "nll_loss",
+    "loss": "ll_loss",
     "metrics": [
-        "accuracy", "top_k_acc"
+        "psnr", "ssim", "lpips_"
     ],
     "lr_scheduler": {
         "type": "StepLR",
