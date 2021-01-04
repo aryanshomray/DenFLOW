@@ -1,17 +1,26 @@
 {
-    "name": "Mnist_LeNet",
-    "n_gpu": 1,
+    "name": "DenFlow",
+    "n_gpu": 0,
 
     "arch": {
-        "type": "MnistModel",
-        "args": {}
+        "type": "DenFlow",
+        "args": {
+            "config": {
+                "in_channels": 3,
+                "data": "sRGB",
+                "condEncoder": "EDSR",
+                "condEncoderOutChannels": 64,
+                "flow_steps": 20
+            }
+        }
     },
     "data_loader": {
-        "type": "MnistDataLoader",
+        "type": "dataloader",
         "args":{
-            "data_dir": "data/",
+            "data_dir": "Data/SIDD_Small_sRGB_Only/Data",
+            "process_dataset": true,
             "batch_size": 128,
-            "shuffle": false,
+            "shuffle": true,
             "validation_split": 0.1,
             "num_workers": 2,
             "crop_size": 256
@@ -25,10 +34,8 @@
             "amsgrad": true
         }
     },
-    "loss": "ll_loss",
-    "metrics": [
-        "psnr", "ssim", "lpips_"
-    ],
+    "loss": "nll_loss",
+    "metrics": [],
     "lr_scheduler": {
         "type": "StepLR",
         "args": {
