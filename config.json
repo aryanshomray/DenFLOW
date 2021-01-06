@@ -1,6 +1,6 @@
 {
     "name": "DenFlow",
-    "n_gpu": 0,
+    "n_gpu": 1,
 
     "arch": {
         "type": "DenFlow",
@@ -9,8 +9,8 @@
                 "in_channels": 3,
                 "data": "sRGB",
                 "condEncoder": "EDSR",
-                "condEncoderOutChannels": 64,
-                "flow_steps": 20
+                "condEncoderOutChannels": 16,
+                "flow_steps": 2
             }
         }
     },
@@ -18,10 +18,10 @@
         "type": "dataloader",
         "args":{
             "data_dir": "Data/SIDD_Small_sRGB_Only/Data",
-            "process_dataset": true,
-            "batch_size": 128,
+            "process_dataset": false,
+            "batch_size": 2,
             "shuffle": true,
-            "validation_split": 0.1,
+            "validation_split": 0,
             "num_workers": 2,
             "crop_size": 256
         }

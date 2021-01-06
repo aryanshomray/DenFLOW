@@ -49,7 +49,7 @@ class ImageDataset(Dataset):
             self.data_dir, self.num = process_data(data_dir, crop_size)
         else:
             self.data_dir = "Data/dataset_{}".format(crop_size)
-            self.num = os.listdir(self.data_dir)
+            self.num = len(os.listdir(self.data_dir))
         self.data_list = os.listdir(self.data_dir)
         self.transforms = transforms.Compose([
             ToTensor()

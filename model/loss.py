@@ -7,11 +7,12 @@ def calc_prior(output: torch.tensor):
     prior = torch.matmul(output, output.T)
     prior += torch.log(torch.tensor(2 * pi))
     prior *= -0.5
-    print(prior)
     return prior
 
 
 def nll_loss(output):
     output, logdet = output
     prior = calc_prior(output)
-    return prior + logdet
+    loss = prior + logdet
+    loss = torch.mean(loss)
+    return loss

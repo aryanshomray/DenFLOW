@@ -9,13 +9,14 @@ def get_logdet(inp):
 
 class CondAffineCoupling(nn.Module):
 
-    def __init__(self, in_channels):
+    def __init__(self, config):
         super(CondAffineCoupling, self).__init__()
         self.eps = 1e-4
-        self.net = utils.get_net(5, 3, 64, 10)
+        self.net = utils.get_net(config['condEncoderOutChannels'] + config['in_channels'] // 2,
+                                 2 * (config['in_channels'] - config['in_channels'] // 2), 64, 10)
 
     def forward(self, inp, logdet=None, reverse=False, img_ft=None):
-        z1, z2 = utils.split(inp, "cross")
+        z2, z1 = utils.split(inp, "cross")
         z = torch.cat([z1, img_ft], dim=1)
         out = self.net(z)
         scale, shift = utils.split(out, "cross")

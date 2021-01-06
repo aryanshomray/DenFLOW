@@ -46,6 +46,7 @@ class Trainer(BaseTrainer):
             self.optimizer.zero_grad()
             output = self.model(clean, noisy)
             loss = self.criterion(output)
+
             loss.backward()
             self.optimizer.step()
 
