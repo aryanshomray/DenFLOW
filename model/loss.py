@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-
+from .modules import utils
 log2pi = np.log(2 * np.pi)
 
 
@@ -12,7 +12,9 @@ def calc_prior(output: torch.tensor):
 
 def nll_loss(output):
     output, logdet = output
+    num_pixels = utils.num_pixels(output)
     prior = calc_prior(output)
     loss = prior + logdet
-    loss = torch.mean(loss)
+    loss = -torch.mean(loss)
+    loss = loss/num_pixels
     return loss
