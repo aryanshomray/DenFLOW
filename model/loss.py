@@ -15,6 +15,6 @@ def nll_loss(output):
     num_pixels = utils.num_pixels(output)
     prior = calc_prior(output)
     loss = prior + logdet
-    loss = -torch.mean(loss)
+    loss = -torch.sum(loss)
     loss = loss/num_pixels
     return loss
