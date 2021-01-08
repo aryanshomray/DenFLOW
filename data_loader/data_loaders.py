@@ -1,4 +1,3 @@
-from torch.utils.data.dataset import T_co
 from tqdm import tqdm
 from base import BaseDataLoader
 from torch.utils.data import Dataset
@@ -58,7 +57,7 @@ class ImageDataset(Dataset):
     def __len__(self) -> int:
         return self.num
 
-    def __getitem__(self, index) -> T_co:
+    def __getitem__(self, index):
         img = np.load(os.path.join(self.data_dir, self.data_list[index]))
         clean = self.transforms(img[0, :, :, :])
         noisy = self.transforms(img[1, :, :, :])

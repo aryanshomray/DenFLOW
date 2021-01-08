@@ -1,12 +1,12 @@
 import torch
-from math import pi
+import numpy as np
+
+log2pi = np.log(2 * np.pi)
 
 
 def calc_prior(output: torch.tensor):
-    output = output.view(-1).contiguous()
-    prior = torch.matmul(output, output.T)
-    prior += torch.log(torch.tensor(2 * pi))
-    prior *= -0.5
+    prior = -0.5 * ((output ** 2) + torch.tensor(log2pi))
+    prior = torch.sum(prior, dim=[1,2,3])
     return prior
 
 
