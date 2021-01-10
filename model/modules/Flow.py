@@ -14,7 +14,7 @@ class Flow(nn.Module):
         )
 
     def forward(self, clean, img_ft, reverse=False):
-        logdet = torch.zeros_like(clean[:, 0, 0, 0])
+        logdet = torch.zeros_like(clean[0, 0, 0, 0])
 
         if not reverse:
             output, logdet = self.transition(clean, logdet, reverse)

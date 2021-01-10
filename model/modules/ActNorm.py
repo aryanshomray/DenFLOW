@@ -11,7 +11,7 @@ class _ActNorm(nn.Module):
         self.size = [1, self.num_features, 1, 1]
         self.register_parameter("bias", nn.Parameter(torch.zeros(*self.size)))
         self.register_parameter("scale", nn.Parameter(torch.zeros(*self.size)))
-        self.register_buffer("_initialized", torch.Tensor(0))
+        self._initialized = False
 
     def check_dims(self, inp: torch.tensor) -> None:
         raise NotImplementedError
@@ -22,18 +22,16 @@ class _ActNorm(nn.Module):
         assert inp.device == self.bias.device
 
         with torch.no_grad():
-            bias = utils.mean(inp.clone(), dim=[1, 2, 3], keepdim=True) * -1.0
-            vars: torch.Tensor = utils.mean((inp.clone() + bias), dim=[0, 2, 3], keepdim=True)
-            # noinspection PyTypeChecker
-            scale = -torch.log((torch.sqrt(vars) + 1e-6))
+            bias = utils.mean(inp.clone(), dim=[0, 2, 3], keepdim=True) * -1.0
+            vars: torch.Tensor = utils.mean((inp.clone() + bias)**2, dim=[0, 2, 3], keepdim=True)
+            scale = -torch.log((torch.sqrt(vars) + torch.tensor(1e-6)))
             self.bias.data.copy_(bias.data)
-            self.scale.data.copy(scale.data)
+            self.scale.data.copy_(scale.data)
 
     def forward(self, inp, logdet=None, reverse=False):
-        if not self._initialized:
+        if not self._initialized and not reverse:
             self.init_param(inp)
-            self._initizalized = torch.tensor(1)
-
+            self._initialized = True
         self.check_dims(inp)
 
         if not reverse:
@@ -49,7 +47,6 @@ class _ActNorm(nn.Module):
             _logdet *= -1.0
 
         logdet += _logdet
-
         return inp, logdet
 
 

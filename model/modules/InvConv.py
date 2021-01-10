@@ -40,7 +40,6 @@ class Invertible1x1Conv(nn.Module):
         else:
             if logdet is not None:
                 logdet -= _logdet
-
         return out, logdet
 
 

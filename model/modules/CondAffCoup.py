@@ -4,7 +4,7 @@ from . import utils
 
 
 def get_logdet(inp):
-    return utils.sum(torch.log(inp), dim=[1, 2, 3])
+    return utils.sum(torch.log(inp))
 
 
 class CondAffineCoupling(nn.Module):
@@ -34,5 +34,4 @@ class CondAffineCoupling(nn.Module):
 
         z = torch.cat([z1, z2], dim=1)
         output = z
-
         return output, logdet

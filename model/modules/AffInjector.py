@@ -11,7 +11,7 @@ class AffineInjector(nn.Module):
 
     def __init__(self, config):
         super(AffineInjector, self).__init__()
-        self.eps = 1e-4
+        self.eps = 1e-6
         self.net = utils.get_net(config['condEncoderOutChannels'], config['in_channels'] * 2, 64, 10)
 
     def forward(self, inp, logdet=None, reverse=False, img_ft=None):
@@ -29,5 +29,4 @@ class AffineInjector(nn.Module):
             if logdet is not None:
                 logdet -= get_logdet(scale)
         output = inp
-
         return output, logdet
