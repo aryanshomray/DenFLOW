@@ -85,7 +85,7 @@ class Trainer(BaseTrainer):
         with torch.no_grad():
             for batch_idx, (clean, noisy) in enumerate(self.valid_data_loader):
                 clean, noisy = clean.to(self.device), noisy.to(self.device)
-                latent_space = torch.normal(0.0, 0.0, clean.shape)
+                latent_space = torch.normal(0.0, 0.0, clean.shape).to(self.device)
                 output = self.model(latent_space, noisy, reverse=True)[0]
                 # loss = self.criterion(output, target)
 
