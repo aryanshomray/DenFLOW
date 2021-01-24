@@ -52,8 +52,8 @@ class Trainer(BaseTrainer):
 
             self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
             self.train_metrics.update('loss', loss.item())
-            for met in self.metric_ftns:
-                self.train_metrics.update(met.__name__, met(output, noisy))
+            # for met in self.metric_ftns:
+            #     self.train_metrics.update(met.__name__, met(output, noisy))
 
             if batch_idx % self.log_step == 0:
                 self.logger.debug('Train Epoch: {} {} Loss: {:.6f}'.format(
@@ -83,16 +83,16 @@ class Trainer(BaseTrainer):
         self.model.eval()
         self.valid_metrics.reset()
         with torch.no_grad():
-            for batch_idx, (data, target) in enumerate(self.valid_data_loader):
-                data, target = data.to(self.device), target.to(self.device)
-
-                output = self.model(data)
-                loss = self.criterion(output, target)
+            for batch_idx, (clean, noisy) in enumerate(self.valid_data_loader):
+                clean, noisy = clean.to(self.device), noisy.to(self.device)
+                latent_space = torch.normal(0.0, 0.0, clean.shape)
+                output = self.model(latent_space, noisy, reverse=True)[0]
+                # loss = self.criterion(output, target)
 
                 self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
-                self.valid_metrics.update('loss', loss.item())
+                # self.valid_metrics.update('loss', loss.item())
                 for met in self.metric_ftns:
-                    self.valid_metrics.update(met.__name__, met(output, target))
+                    self.valid_metrics.update(met.__name__, met(output, clean))
 
         # add histogram of model parameters to the tensorboard
         for name, p in self.model.named_parameters():
