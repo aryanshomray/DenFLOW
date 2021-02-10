@@ -1,5 +1,5 @@
 torch>=1.1
-torchvision~=0.2.2.post3
+torchvision>=0.8.2+cu110
 numpy===1.19.3
 tqdm~=4.54.1
 tensorboard>=1.14
@@ -9,3 +9,4 @@ rawpy~=0.16.0
 pytest~=6.2.1
 opencv-python>=4.4.0.46
 Pillow>=8.0.1
+nflows

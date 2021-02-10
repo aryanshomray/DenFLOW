@@ -44,8 +44,8 @@ class Trainer(BaseTrainer):
             clean, noisy = clean.to(self.device), noisy.to(self.device)
 
             self.optimizer.zero_grad()
-            output = self.model(clean, noisy)
-            loss = self.criterion(output)
+            loss = -self.model.log_prob(clean, context=noisy)
+            loss = loss.mean()/self.model.N
 
             loss.backward()
             self.optimizer.step()
@@ -85,7 +85,8 @@ class Trainer(BaseTrainer):
         with torch.no_grad():
             for batch_idx, (clean, noisy) in enumerate(self.valid_data_loader):
                 clean, noisy = clean.to(self.device), noisy.to(self.device)
-                latent_space = torch.normal(0.0, 0.0, clean.shape).to(self.device)
+                latent_space = self.model.sample(2, context=noisy)
+
                 output = self.model(latent_space, noisy, reverse=True)[0]
                 # loss = self.criterion(output, target)
 

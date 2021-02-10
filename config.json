@@ -10,7 +10,11 @@
                 "data": "sRGB",
                 "condEncoder": "EDSR",
                 "condEncoderOutChannels": 16,
-                "flow_steps": 2
+                "flow_steps": 2,
+                "num_glowsteps": 4,
+                "num_bocks": 2,
+                "num_channels": 3,
+                "crop_size": 256
             }
         }
     },
@@ -21,7 +25,7 @@
             "process_dataset": false,
             "batch_size": 2,
             "shuffle": true,
-            "validation_split": 0,
+            "validation_split": 0.1,
             "num_workers": 2,
             "crop_size": 256
         }
@@ -35,7 +39,9 @@
         }
     },
     "loss": "nll_loss",
-    "metrics": [],
+    "metrics": [
+        "psnr","ssim"
+    ],
     "lr_scheduler": {
         "type": "StepLR",
         "args": {
