@@ -3,17 +3,12 @@
     "n_gpu": 1,
 
     "arch": {
-        "type": "DenFlow",
+        "type": "Glow",
         "args": {
             "config": {
-                "in_channels": 3,
-                "data": "sRGB",
-                "condEncoder": "EDSR",
-                "condEncoderOutChannels": 16,
-                "flow_steps": 2,
-                "num_glowsteps": 4,
-                "num_bocks": 2,
                 "num_channels": 3,
+                "num_flow": 2,
+                "num_scale": 2,
                 "crop_size": 256
             }
         }
@@ -33,7 +28,7 @@
     "optimizer": {
         "type": "Adam",
         "args":{
-            "lr": 0.001,
+            "lr": 0.0001,
             "weight_decay": 0,
             "amsgrad": true
         }

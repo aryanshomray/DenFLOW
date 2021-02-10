@@ -80,7 +80,9 @@ class CouplingTransform(Transform):
         identity_split = inputs[:, self.identity_features, ...]
         transform_split = inputs[:, self.transform_features, ...]
 
-        transform_params = self.transform_net(identity_split, context)
+        # transform_params = self.transform_net(identity_split, context)
+        transform_params = self.transform_net(identity_split)
+
         transform_split, logabsdet = self._coupling_transform_forward(
             inputs=transform_split, transform_params=transform_params
         )

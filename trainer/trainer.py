@@ -43,10 +43,11 @@ class Trainer(BaseTrainer):
         for batch_idx, (clean, noisy) in enumerate(self.data_loader):
             clean, noisy = clean.to(self.device), noisy.to(self.device)
 
+            loss = self.model.log_prob(clean)
+            loss = -loss.mean()
+            loss = loss / self.model.N
+            loss += torch.log(torch.tensor(256, device=self.device).float())
             self.optimizer.zero_grad()
-            loss = -self.model.log_prob(clean, context=noisy)
-            loss = loss.mean()/self.model.N
-
             loss.backward()
             self.optimizer.step()
 
