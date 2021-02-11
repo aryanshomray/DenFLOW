@@ -20,7 +20,7 @@
             "process_dataset": false,
             "batch_size": 2,
             "shuffle": true,
-            "validation_split": 0.1,
+            "validation_split": 0.99,
             "num_workers": 2,
             "crop_size": 256
         }

@@ -1,8 +1,9 @@
 import numpy as np
 import torch
-from torchvision.utils import make_grid
 from base import BaseTrainer
 from utils import inf_loop, MetricTracker
+from torchvision.utils import make_grid
+from tqdm import tqdm
 
 
 class Trainer(BaseTrainer):
@@ -84,18 +85,14 @@ class Trainer(BaseTrainer):
         self.model.eval()
         self.valid_metrics.reset()
         with torch.no_grad():
-            for batch_idx, (clean, noisy) in enumerate(self.valid_data_loader):
+            for batch_idx, (clean, noisy) in tqdm(enumerate(self.valid_data_loader), total=len(self.valid_data_loader)):
                 clean, noisy = clean.to(self.device), noisy.to(self.device)
-                latent_space = self.model.sample(2, context=noisy)
-
-                output = self.model(latent_space, noisy, reverse=True)[0]
-                # loss = self.criterion(output, target)
-
+                output = self.model.sample(1, context=noisy).squeeze()
+                # print(output.shape)
                 self.writer.set_step((epoch - 1) * len(self.valid_data_loader) + batch_idx, 'valid')
-                # self.valid_metrics.update('loss', loss.item())
                 for met in self.metric_ftns:
                     self.valid_metrics.update(met.__name__, met(output, clean))
-
+                self.writer.add_image('input', make_grid(output.cpu(), nrow=8, normalize=True))
         # add histogram of model parameters to the tensorboard
         for name, p in self.model.named_parameters():
             self.writer.add_histogram(name, p, bins='auto')

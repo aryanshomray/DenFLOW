@@ -117,7 +117,7 @@ class CouplingTransform(Transform):
                 identity_split, context
             )
 
-        transform_params = self.transform_net(identity_split, context)
+        transform_params = self.transform_net(identity_split)
         transform_split, logabsdet_split = self._coupling_transform_inverse(
             inputs=transform_split, transform_params=transform_params
         )
