@@ -148,7 +148,7 @@ def getGlowStep(num_channels):
 
 
 def getGlowScale(num_channels, num_flow):
-    z = [getGlowStep(num_channels)] * num_flow
+    z = [getGlowStep(num_channels) for _ in range(num_flow)]
     return transforms.CompositeTransform([
         transforms.SqueezeTransform(),
         *z

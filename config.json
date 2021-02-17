@@ -6,21 +6,21 @@
         "type": "Glow",
         "args": {
             "config": {
-                "num_channels": 3,
+                "num_channels": 1,
                 "num_flow": 2,
                 "num_scale": 2,
-                "crop_size": 256
+                "crop_size": 28
             }
         }
     },
     "data_loader": {
-        "type": "dataloader",
+        "type": "MnistDataLoader",
         "args":{
-            "data_dir": "Data/SIDD_Small_sRGB_Only/Data",
+            "data_dir": "Data/MNIST",
             "process_dataset": false,
-            "batch_size": 2,
+            "batch_size": 1,
             "shuffle": true,
-            "validation_split": 0.99,
+            "validation_split": 0.1,
             "num_workers": 2,
             "crop_size": 256
         }

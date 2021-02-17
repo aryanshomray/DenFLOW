@@ -49,7 +49,7 @@ def main(config):
     metric_fns = [getattr(module_metric, met) for met in config['metrics']]
 
     logger.info('Loading checkpoint: {} ...'.format(config.resume))
-    checkpoint = torch.load('checkpoint-epoch47.pth', map_location=torch.device('cpu'))
+    checkpoint = torch.load(config.resume)
     state_dict = checkpoint['state_dict']
     if config['n_gpu'] > 1:
         model = torch.nn.DataParallel(model)
@@ -69,39 +69,23 @@ def main(config):
     PATH = f'Results/{datetime.now()}'
     os.mkdir(PATH)
     img_counter = 0
+    losses = []
     with torch.no_grad():
         for i, (clean, noisy) in enumerate(tqdm(data_loader)):
-            Batch_Size = clean.shape[0]
             clean, noisy = clean.to(device), noisy.to(device)
-            latent_space = torch.normal(0.0, 0.0, clean.shape).to(device)
-            output = model(latent_space, noisy, reverse=True)[0]
-            out = output.cpu().permute([0, 2, 3, 1]).numpy()
-
-            clean_out = clean.cpu().permute([0, 2, 3, 1]).numpy()
-            for j in range(Batch_Size):
-                out_img = out[j]
-                clean_img = clean_out[j]
-                save_img = Image.fromarray(concat_images(out_img, clean_img))
-                save_img.save(f'{PATH}/{img_counter}.png')
-                img_counter += 1
-
-            #
-            # save sample images, or do something with output here
-            #
-
-            # computing loss, metrics on test set
-            loss = loss_fn(output, clean)
-            batch_size = clean.shape[0]
-            total_loss += loss.item() * batch_size
-            for i, metric in enumerate(metric_fns):
-                total_metrics[i] += metric(output, clean) * batch_size
-
+            loss = model.log_prob(clean)
+            loss = -loss.mean()
+            loss = loss / model.N
+            loss += torch.log(torch.tensor(256, device=device).float())
+            total_loss += loss.item()
+            
     n_samples = len(data_loader.sampler)
     log = {'loss': total_loss / n_samples}
     log.update({
         met.__name__: total_metrics[i].item() / n_samples for i, met in enumerate(metric_fns)
     })
     logger.info(log)
+    print()
 
 
 if __name__ == '__main__':

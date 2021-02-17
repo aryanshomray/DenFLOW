@@ -43,7 +43,6 @@ class Trainer(BaseTrainer):
         self.train_metrics.reset()
         for batch_idx, (clean, noisy) in enumerate(self.data_loader):
             clean, noisy = clean.to(self.device), noisy.to(self.device)
-
             loss = self.model.log_prob(clean)
             loss = -loss.mean()
             loss = loss / self.model.N

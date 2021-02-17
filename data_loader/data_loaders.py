@@ -7,6 +7,7 @@ import shutil
 import numpy as np
 from torchvision import transforms
 from torchvision.transforms import ToTensor
+from torchvision import datasets, transforms
 
 
 class dataloader(BaseDataLoader):
@@ -15,6 +16,21 @@ class dataloader(BaseDataLoader):
                  crop_size=256):
         self.data_dir = data_dir
         self.dataset = ImageDataset(data_dir, crop_size, process_dataset)
+        super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
+
+
+class MnistDataLoader(BaseDataLoader):
+    """
+    MNIST data loading demo using BaseDataLoader
+    """
+
+    def __init__(self, data_dir, batch_size, process_dataset, shuffle=True, validation_split=0.0, num_workers=1,
+                 training=True, crop_size=28):
+        trsfm = transforms.Compose([
+            transforms.ToTensor()
+        ])
+        self.data_dir = data_dir
+        self.dataset = datasets.MNIST(self.data_dir, train=training, download=True, transform=trsfm)
         super().__init__(self.dataset, batch_size, shuffle, validation_split, num_workers)
 
 
