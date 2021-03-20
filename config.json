@@ -9,7 +9,7 @@
                 "num_channels": 1,
                 "num_flow": 2,
                 "num_scale": 2,
-                "crop_size": 28
+                "crop_size": 32
             }
         }
     },

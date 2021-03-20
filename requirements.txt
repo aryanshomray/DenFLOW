@@ -9,4 +9,5 @@ rawpy~=0.16.0
 pytest~=6.2.1
 opencv-python>=4.4.0.46
 Pillow>=8.0.1
-nflows
+nflows>=0.14
+matplotlib>=3.3.4

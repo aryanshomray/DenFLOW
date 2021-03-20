@@ -5,6 +5,9 @@ from utils import inf_loop, MetricTracker
 from torchvision.utils import make_grid
 from tqdm import tqdm
 
+import matplotlib.pyplot as plt
+
+
 
 class Trainer(BaseTrainer):
     """
@@ -47,10 +50,11 @@ class Trainer(BaseTrainer):
             loss = -loss.mean()
             loss = loss / self.model.N
             loss += torch.log(torch.tensor(256, device=self.device).float())
+            loss /= torch.log(torch.tensor(2, device=self.device).float())
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
-
+            print(self.model.sample(1)[0, 0, 0, 0])
             self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
             self.train_metrics.update('loss', loss.item())
             # for met in self.metric_ftns:
